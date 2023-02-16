@@ -226,7 +226,7 @@ module Prawn
                     if @rotate != 0 && @inked
                       render_rotated(text)
                     else
-                      wrap(text)
+                      wrap(text, epsilon: -0.000001)
                     end
                   @inked = false
                 end
@@ -550,7 +550,7 @@ module Prawn
           loop do
             if @disable_wrap_by_char && @font_size > @min_font_size
               begin
-                wrap(text)
+                wrap(text, epsilon: 0.000001)
               rescue Errors::CannotFit
                 # Ignore errors while we can still attempt smaller
                 # font sizes.

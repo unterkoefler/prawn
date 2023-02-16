@@ -44,7 +44,7 @@ module Prawn
         #
         # Returns any formatted text that was not printed
         #
-        def wrap(array) # :nodoc:
+        def wrap(array, epsilon: 0.0) # :nodoc:
           initialize_wrap(array)
 
           stop = false
@@ -57,7 +57,8 @@ module Prawn
               kerning: @kerning,
               width: available_width,
               arranger: @arranger,
-              disable_wrap_by_char: @disable_wrap_by_char
+              disable_wrap_by_char: @disable_wrap_by_char,
+              epsilon: epsilon
             )
 
             if enough_height_for_this_line?

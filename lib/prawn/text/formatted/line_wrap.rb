@@ -46,7 +46,7 @@ module Prawn
             fragment.lstrip! if first_fragment_on_this_line?(fragment)
             next if empty_line?(fragment)
 
-            unless apply_font_settings_and_add_fragment_to_line(fragment)
+            unless apply_font_settings_and_add_fragment_to_line(fragment, epsilon: options[:epsilon])
               break
             end
           end
@@ -74,10 +74,10 @@ module Prawn
           @arranger.preview_next_string == "\n"
         end
 
-        def apply_font_settings_and_add_fragment_to_line(fragment)
+        def apply_font_settings_and_add_fragment_to_line(fragment, epsilon: 0.0)
           result = nil
           @arranger.apply_font_settings do
-            result = add_fragment_to_line(fragment)
+            result = add_fragment_to_line(fragment, epsilon: epsilon)
           end
           result
         end
@@ -85,7 +85,7 @@ module Prawn
         # returns true if all text was printed without running into the end of
         # the line
         #
-        def add_fragment_to_line(fragment)
+        def add_fragment_to_line(fragment, epsilon: 0.0)
           case fragment
           when ''
             true
@@ -101,7 +101,7 @@ module Prawn
                   @document.width_of(segment, kerning: @kerning)
                 end
 
-              if @accumulated_width + segment_width <= @width
+              if @accumulated_width + segment_width <= @width + epsilon
                 @accumulated_width += segment_width
                 shy = soft_hyphen(segment.encoding)
                 if segment[-1] == shy

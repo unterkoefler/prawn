@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'byebug'
 
 describe Prawn::Text::Box do
   let(:pdf) { create_pdf }
@@ -828,6 +829,24 @@ describe Prawn::Text::Box do
             min_font_size: 2
           )
         )
+      end
+
+      it 'displays the entire text when the box is just big enough' do
+        text = 'Two words'
+        size = 12.0
+        text_box = described_class.new(
+          text,
+          options.merge(
+            size: size,
+            width: 56.328, # pdf.width_of(text, size: size),
+            height: 12.0, # pdf.height_of(text, size: size),
+            overflow: :shrink_to_fit,
+            disable_wrap_by_char: true
+          )
+        )
+
+        overflow = text_box.render
+        expect(overflow).to eq('')
       end
 
       it 'displays the entire text' do
